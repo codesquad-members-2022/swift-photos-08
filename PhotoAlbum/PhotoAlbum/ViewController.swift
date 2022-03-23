@@ -1,7 +1,7 @@
 import UIKit
 import Photos
 
-class ViewController: UIViewController, UICollectionViewDelegate {
+class ViewController: UIViewController {
     
     var images: PHAssetCollection?
     var assets: [PHAsset] = []
@@ -20,35 +20,49 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         self.collectionView.dataSource = self
         
         PHPhotoLibrary.shared().register(self)
-        
-        if PHPhotoLibrary.authorizationStatus() == .authorized || PHPhotoLibrary.authorizationStatus() == .limited {
-            PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
-                self.images = collection
-            }
-        } else if PHPhotoLibrary.authorizationStatus() == .denied {
-            print("Permission Denied")
+        getAuthorization()
+    }
+    
+    func getAuthorization() {
+        if isAlbumAcessAuthorized() {
+            fetchAssetCollection()
+        } else if isAlbumAccessDenied() {
         } else {
             PHPhotoLibrary.requestAuthorization() { (status) in
-                switch status {
-                case .authorized:
-                    PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
-                        self.images = collection
-                    }
-                    break
-                default:
-                    print("Permission Denied")
-                }
+                self.getAuthorization()
             }
         }
+    }
+    
+
+    func fetchAssetCollection() {
+        PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
+            self.images = collection
+        }
         
+        self.fetchAsset()
+    }
+    
+    func isAlbumAcessAuthorized() -> Bool {
+        return PHPhotoLibrary.authorizationStatus() == .authorized || PHPhotoLibrary.authorizationStatus() == .limited
+    }
+    
+    func isAlbumAccessDenied() -> Bool {
+        return PHPhotoLibrary.authorizationStatus() == .denied
+    }
+    
+    func fetchAsset() {
+        guard let images = self.images else {
+            return
+        }
+
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         
-        PHAsset.fetchAssets(in: self.images!, options: fetchOptions).enumerateObjects({ (asset, _, _) in
+                PHAsset.fetchAssets(in: images, options: fetchOptions).enumerateObjects({ (asset, _, _) in
             self.assets.append(asset)
         })
     }
-    
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
