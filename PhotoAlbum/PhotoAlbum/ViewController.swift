@@ -41,9 +41,9 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             }
         }
         
-       
-
-        
+        PHAsset.fetchAssets(in: self.images!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
+            self.assets.append(asset)
+        })
     }
     
 }
@@ -59,18 +59,12 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as! CustomCollectionViewCell
 
-        var assets: [PHAsset] = []
+        let option = PHImageRequestOptions()
+        option.isSynchronous = true
         
-        
-        PHAsset.fetchAssets(in: self.selectedCollection!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
-            assets.append(asset)
+        PHImageManager.default().requestImage(for: assets[indexPath.row], targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: option, resultHandler: {(result, info) ->  Void in
+            cell.imageView.image = result
         })
-        
-        assets.forEach {
-            PHImageManager.default().requestImage(for: $0, targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: PHImageRequestOptions(), resultHandler: {(result, info) ->  Void in
-                cell.imageView.image = result
-            })
-        }
         return cell
     }
     
