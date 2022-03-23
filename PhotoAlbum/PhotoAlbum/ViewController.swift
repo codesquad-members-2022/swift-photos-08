@@ -39,10 +39,11 @@ class ViewController: UIViewController, UICollectionViewDelegate {
                     print("Permission Denied")
                 }
             }
+        }
         
         PHAsset.fetchAssets(in: self.images!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
             self.assets.append(asset)
-        })}
+        })
     }
     
 }
@@ -51,22 +52,22 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
         guard let images = self.images else { return 0 }
-
+        
         return PHAsset.fetchAssets(in: images, options: nil).count
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as! CustomCollectionViewCell
-
+        
         let manager = PHCachingImageManager()
         let option = PHImageRequestOptions()
         option.isSynchronous = true
         
         manager
             .requestImage(for: assets[indexPath.row], targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: option, resultHandler: {(result, info) ->  Void in
-            cell.imageView.image = result
-        })
-
+                cell.imageView.image = result
+            })
+        
         return cell
     }
     
