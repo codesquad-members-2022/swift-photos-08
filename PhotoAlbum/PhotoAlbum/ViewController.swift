@@ -27,6 +27,7 @@ class ViewController: UIViewController {
         if isAlbumAcessAuthorized() {
             fetchAssetCollection()
         } else if isAlbumAccessDenied() {
+            async { self.setAuthAlertAction() }
         } else {
             PHPhotoLibrary.requestAuthorization() { (status) in
                 self.getAuthorization()
@@ -34,6 +35,18 @@ class ViewController: UIViewController {
         }
     }
     
+    func setAuthAlertAction() {
+        let authAlert = UIAlertController(title: "사진 앨범 권한 요청", message: "사진첩 권한을 허용해야만 기능을 사용하실 수 있습니다.", preferredStyle: .alert)
+        
+        let getAuthAction = UIAlertAction(title: "넵", style: .default, handler: { (UIAlertAction) in
+            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+            }
+        })
+        
+        authAlert.addAction(getAuthAction)
+        self.present(authAlert, animated: true, completion: nil)
+    }
 
     func fetchAssetCollection() {
         PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
