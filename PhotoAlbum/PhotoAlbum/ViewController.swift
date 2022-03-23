@@ -31,7 +31,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             PHPhotoLibrary.requestAuthorization() { (status) in
                 switch status {
                 case .authorized:
-                    PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.any, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
+                    PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
                         self.images = collection
                     }
                     break
@@ -39,11 +39,10 @@ class ViewController: UIViewController, UICollectionViewDelegate {
                     print("Permission Denied")
                 }
             }
-        }
         
         PHAsset.fetchAssets(in: self.images!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
             self.assets.append(asset)
-        })
+        })}
     }
     
 }
@@ -59,12 +58,15 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as! CustomCollectionViewCell
 
+        let manager = PHCachingImageManager()
         let option = PHImageRequestOptions()
         option.isSynchronous = true
         
-        PHImageManager.default().requestImage(for: assets[indexPath.row], targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: option, resultHandler: {(result, info) ->  Void in
+        manager
+            .requestImage(for: assets[indexPath.row], targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: option, resultHandler: {(result, info) ->  Void in
             cell.imageView.image = result
         })
+
         return cell
     }
     
