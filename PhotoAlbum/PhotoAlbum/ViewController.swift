@@ -78,6 +78,12 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
 
 extension ViewController: PHPhotoLibraryChangeObserver {
     func photoLibraryDidChange(_ changeInstance: PHChange) {
-
+        async {
+            let alert = UIAlertController(title: "옵저버가 변화를 감지했습니다!", message: "아직 무슨 변화인지는 몰라요!", preferredStyle: UIAlertController.Style.alert)
+            let defaultAction = UIAlertAction(title: "OK", style: .destructive, handler: nil)
+            alert.addAction(defaultAction)
+            present(alert, animated: false, completion: nil)
+        }
     }
 }
+
