@@ -3,8 +3,8 @@ import Photos
 
 class ViewController: UIViewController, UICollectionViewDelegate {
     
-//    var images: [PHAssetCollection] = []
-    var selectedCollection: PHAssetCollection?
+    var images: PHAssetCollection?
+    var assets: [PHAsset] = []
     
     @IBOutlet weak var collectionView: UICollectionView!
     
@@ -22,11 +22,8 @@ class ViewController: UIViewController, UICollectionViewDelegate {
         PHPhotoLibrary.shared().register(self)
         
         if PHPhotoLibrary.authorizationStatus() == .authorized || PHPhotoLibrary.authorizationStatus() == .limited {
-            PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.any, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
-//                self.images.append(collection)
-                if collection.localizedTitle == "Recents" {
-                    self.selectedCollection = collection
-                }
+            PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
+                self.images = collection
             }
         } else if PHPhotoLibrary.authorizationStatus() == .denied {
             print("Permission Denied")
@@ -35,7 +32,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
                 switch status {
                 case .authorized:
                     PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.any, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
-//                        self.images.append(collection)
+                        self.images = collection
                     }
                     break
                 default:
@@ -54,9 +51,7 @@ class ViewController: UIViewController, UICollectionViewDelegate {
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let images = self.selectedCollection else {
-            return 0
-        }
+        guard let images = self.images else { return 0 }
 
         return PHAsset.fetchAssets(in: images, options: nil).count
     }
@@ -66,11 +61,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
 
         var assets: [PHAsset] = []
         
-//        images.forEach {
-//            PHAsset.fetchAssets(in: $0, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
-//                assets.append(asset)
-//            })
-//        }
         
         PHAsset.fetchAssets(in: self.selectedCollection!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
             assets.append(asset)
