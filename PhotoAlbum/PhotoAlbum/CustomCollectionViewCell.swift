@@ -16,7 +16,6 @@ class CustomCollectionViewCell: UICollectionViewCell {
     
     func setImageView() {
         addSubview(imageView)
-        
         imageView.topAnchor.constraint(equalTo: self.topAnchor).isActive = true
         imageView.bottomAnchor.constraint(equalTo: self.bottomAnchor).isActive = true
         imageView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
