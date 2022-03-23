@@ -41,7 +41,10 @@ class ViewController: UIViewController, UICollectionViewDelegate {
             }
         }
         
-        PHAsset.fetchAssets(in: self.images!, options: PHFetchOptions()).enumerateObjects({ (asset, _, _) in
+        let fetchOptions = PHFetchOptions()
+        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
+        
+        PHAsset.fetchAssets(in: self.images!, options: fetchOptions).enumerateObjects({ (asset, _, _) in
             self.assets.append(asset)
         })
     }
