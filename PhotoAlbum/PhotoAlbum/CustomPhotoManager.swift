@@ -15,10 +15,10 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         static let  authorizationDeniedAlert = Notification.Name("authorizationDeniedAlert")
     }
     
-    let manager = PHCachingImageManager()
-    let option = PHImageRequestOptions()
-    var images: PHAssetCollection?
-    var assets: [PHAsset] = []
+    private let manager = PHCachingImageManager()
+    private let option = PHImageRequestOptions()
+    private var images: PHAssetCollection?
+    private var assets: [PHAsset] = []
     var imageData: [Data] = []
     
     deinit {
