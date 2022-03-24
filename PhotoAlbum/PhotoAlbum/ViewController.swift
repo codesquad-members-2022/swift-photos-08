@@ -14,6 +14,7 @@ class ViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        initializeNotificationCenter()
         
         self.collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
         self.collectionView.delegate = self
@@ -33,6 +34,8 @@ class ViewController: UIViewController {
                 self.getAuthorization()
             }
         }
+    private func initializeNotificationCenter(){
+        NotificationCenter.default.addObserver(self, selector: #selector(presentAlert(_:)), name: CustomPhotoManager.NotificationName.authorizationDeniedAlert, object: self.customPhotoManager)
     }
     
     func setAuthAlertAction() {
