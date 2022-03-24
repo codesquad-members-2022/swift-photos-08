@@ -19,6 +19,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     let option = PHImageRequestOptions()
     var images: PHAssetCollection?
     var assets: [PHAsset] = []
+    var imageData: [Data] = []
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
@@ -65,8 +66,17 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
             self.assets.append(asset)
         })
         
+        self.requestUIImage()
     }
     
+    func requestUIImage(){
+        for index in 0..<assets.count{
+            manager.requestImageDataAndOrientation(for: assets[index], options: option, resultHandler: {(data, _, _, _)-> Void in
+                guard let data = data else { return }
+                self.imageData.append(data)
+            })
+        }
+    }
     
     func isAlbumAcessAuthorized() -> Bool {
         return PHPhotoLibrary.authorizationStatus() == .authorized || PHPhotoLibrary.authorizationStatus() == .limited
