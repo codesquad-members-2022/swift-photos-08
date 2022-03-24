@@ -2,15 +2,12 @@ import UIKit
 import Photos
 
 class ViewController: UIViewController {
-    
-    var images: PHAssetCollection?
-    var assets: [PHAsset] = []
-    
     @IBOutlet weak var collectionView: UICollectionView!
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
+    private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -20,73 +17,37 @@ class ViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         
-        PHPhotoLibrary.shared().register(self)
-        getAuthorization()
+        self.customPhotoManager.getAuthorization()
     }
     
-    func getAuthorization() {
-        if isAlbumAcessAuthorized() {
-            fetchAssetCollection()
-        } else if isAlbumAccessDenied() {
-            async { self.setAuthAlertAction() }
-        } else {
-            PHPhotoLibrary.requestAuthorization() { (status) in
-                self.getAuthorization()
-            }
-        }
     private func initializeNotificationCenter(){
         NotificationCenter.default.addObserver(self, selector: #selector(presentAlert(_:)), name: CustomPhotoManager.NotificationName.authorizationDeniedAlert, object: self.customPhotoManager)
     }
     
-    func setAuthAlertAction() {
-        let authAlert = UIAlertController(title: "사진 앨범 권한 요청", message: "사진첩 권한을 허용해야만 기능을 사용하실 수 있습니다.", preferredStyle: .alert)
+    @objc func presentAlert(_ notification: Notification) {
+        guard let alertTitle = notification.userInfo?[CustomPhotoManager.UserInfoKey.alertTitle] as? String else { return }
+        guard let alertMessage = notification.userInfo?[CustomPhotoManager.UserInfoKey.alertMessage] as? String else { return }
+        guard let actionTitle = notification.userInfo?[CustomPhotoManager.UserInfoKey.actionTitle] as? String else { return }
+        guard let settingActionHandler = notification.userInfo?[CustomPhotoManager.UserInfoKey.settingActionHandler] as? Bool else { return }
         
-        let getAuthAction = UIAlertAction(title: "넵", style: .default, handler: { (UIAlertAction) in
+        let authAlert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+        let getAuthAction = UIAlertAction(title: actionTitle, style: .default, handler: !settingActionHandler ? nil : { (UIAlertAction) in
             if let appSettings = URL(string: UIApplication.openSettingsURLString) {
                 UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
             }
         })
         
         authAlert.addAction(getAuthAction)
-        self.present(authAlert, animated: true, completion: nil)
-    }
-
-    func fetchAssetCollection() {
-        PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
-            self.images = collection
+        DispatchQueue.main.async {
+            self.present(authAlert, animated: true, completion: nil)
         }
-        
-        self.fetchAsset()
-    }
-    
-    func isAlbumAcessAuthorized() -> Bool {
-        return PHPhotoLibrary.authorizationStatus() == .authorized || PHPhotoLibrary.authorizationStatus() == .limited
-    }
-    
-    func isAlbumAccessDenied() -> Bool {
-        return PHPhotoLibrary.authorizationStatus() == .denied
-    }
-    
-    func fetchAsset() {
-        guard let images = self.images else {
-            return
-        }
-
-        let fetchOptions = PHFetchOptions()
-        fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
-        
-                PHAsset.fetchAssets(in: images, options: fetchOptions).enumerateObjects({ (asset, _, _) in
-            self.assets.append(asset)
-        })
     }
 }
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        guard let images = self.images else { return 0 }
-        
-        return PHAsset.fetchAssets(in: images, options: nil).count
+        return self.customPhotoManager.getAssetCount()
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
@@ -109,15 +70,3 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     }
     
 }
-
-extension ViewController: PHPhotoLibraryChangeObserver {
-    func photoLibraryDidChange(_ changeInstance: PHChange) {
-        async {
-            let alert = UIAlertController(title: "옵저버가 변화를 감지했습니다!", message: "아직 무슨 변화인지는 몰라요!", preferredStyle: UIAlertController.Style.alert)
-            let defaultAction = UIAlertAction(title: "OK", style: .destructive, handler: nil)
-            alert.addAction(defaultAction)
-            present(alert, animated: false, completion: nil)
-        }
-    }
-}
-
