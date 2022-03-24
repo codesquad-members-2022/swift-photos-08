@@ -1,12 +1,8 @@
 import UIKit
-import Photos
 
 class ViewController: UIViewController {
+
     @IBOutlet weak var collectionView: UICollectionView!
-    
-    deinit {
-        PHPhotoLibrary.shared().unregisterChangeObserver(self)
-    }
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
     
     override func viewDidLoad() {
@@ -52,16 +48,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as! CustomCollectionViewCell
-        
-        let manager = PHCachingImageManager()
-        let option = PHImageRequestOptions()
-        option.isSynchronous = true
-        
-        manager
-            .requestImage(for: assets[indexPath.row], targetSize: CGSize(width: 100, height: 100), contentMode: .aspectFill, options: option, resultHandler: {(result, info) ->  Void in
-                cell.imageView.image = result
-            })
-        
+        cell.imageView.image = UIImage(data: self.customPhotoManager.imageData[indexPath.row])
         return cell
     }
     
