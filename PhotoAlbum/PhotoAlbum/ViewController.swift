@@ -1,13 +1,18 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+    
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addButton: UIBarButtonItem!
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
+    private var customImageDownloadManager: CustomImageDownloadManager = CustomImageDownloadManager()
+    private var downloadedImage: [UIImage] = []
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        customImageDownloadManager.parsingDoodleData()
+        downloadedImage = customImageDownloadManager.imageData.map { UIImage(data: $0) ?? UIImage() }
         
         initializeNotificationCenter()
         
@@ -17,6 +22,7 @@ class ViewController: UIViewController {
         
         self.customPhotoManager.getAuthorization()
     }
+    
     
     @IBAction func addButtonTouched(_ sender: UIBarButtonItem) {
         let doodleNavigationController = UINavigationController(rootViewController: DoodleViewController())
