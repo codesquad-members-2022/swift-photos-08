@@ -3,10 +3,12 @@ import UIKit
 class ViewController: UIViewController {
 
     @IBOutlet weak var collectionView: UICollectionView!
+    @IBOutlet weak var addButton: UIBarButtonItem!
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         initializeNotificationCenter()
         
         self.collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
@@ -14,6 +16,12 @@ class ViewController: UIViewController {
         self.collectionView.dataSource = self
         
         self.customPhotoManager.getAuthorization()
+    }
+    
+    @IBAction func addButtonTouched(_ sender: UIBarButtonItem) {
+        let doodleNavigationController = UINavigationController(rootViewController: DoodleViewController())
+        doodleNavigationController.modalPresentationStyle = .fullScreen
+        self.present(doodleNavigationController, animated: false)
     }
     
     private func initializeNotificationCenter(){
