@@ -47,14 +47,36 @@
                             <constraint firstItem="2KA-P6-CL1" firstAttribute="leading" secondItem="6Tk-OE-BBY" secondAttribute="leading" id="gBh-w6-jdf"/>
                         </constraints>
                     </view>
-                    <navigationItem key="navigationItem" title="Photos" id="kbw-M1-Stl"/>
+                    <navigationItem key="navigationItem" title="Photos" id="kbw-M1-Stl">
+                        <barButtonItem key="leftBarButtonItem" title="+" id="ChL-FC-GbY">
+                            <connections>
+                                <action selector="addButtonTouched:" destination="BYZ-38-t0r" id="BWG-Wx-ejg"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
+                        <outlet property="addButton" destination="ChL-FC-GbY" id="kvW-s1-wVv"/>
                         <outlet property="collectionView" destination="2KA-P6-CL1" id="mSL-RO-W0i"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="774" y="72"/>
+        </scene>
+        <!--Doodle View Controller-->
+        <scene sceneID="78h-b6-CS1">
+            <objects>
+                <viewController id="v6F-DM-d9J" customClass="DoodleViewController" customModule="PhotoAlbum" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="XDN-WG-dJW">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <viewLayoutGuide key="safeArea" id="3ef-xc-tKl"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JK2-wl-9en" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1491" y="72"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k9o-Wa-qKY">
