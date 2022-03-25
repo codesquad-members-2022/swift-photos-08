@@ -50,7 +50,7 @@
                     <navigationItem key="navigationItem" title="Photos" id="kbw-M1-Stl">
                         <barButtonItem key="leftBarButtonItem" title="+" id="ChL-FC-GbY">
                             <connections>
-                                <action selector="addButtonTouched:" destination="BYZ-38-t0r" id="BWG-Wx-ejg"/>
+                                <action selector="addButtonTouched:" destination="BYZ-38-t0r" id="iu6-dc-CaN"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
@@ -66,17 +66,49 @@
         <!--Doodle View Controller-->
         <scene sceneID="78h-b6-CS1">
             <objects>
-                <viewController id="v6F-DM-d9J" customClass="DoodleViewController" customModule="PhotoAlbum" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="DoodleViewController" useStoryboardIdentifierAsRestorationIdentifier="YES" id="v6F-DM-d9J" customClass="DoodleViewController" customModule="PhotoAlbum" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="XDN-WG-dJW">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="6co-UN-MBI">
+                                <rect key="frame" x="0.0" y="44" width="414" height="818"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" minimumLineSpacing="10" minimumInteritemSpacing="10" sectionInsetReference="safeArea" id="YhS-UM-nGJ">
+                                    <size key="itemSize" width="100" height="100"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="CustomDoodleCollectionViewCell" id="3T4-gv-cQ0" customClass="CustomDoodleCollectionViewCell" customModule="PhotoAlbum" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO">
+                                            <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </view>
+                                        <size key="customSize" width="100" height="100"/>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
                         <viewLayoutGuide key="safeArea" id="3ef-xc-tKl"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="3ef-xc-tKl" firstAttribute="trailing" secondItem="6co-UN-MBI" secondAttribute="trailing" id="DxX-RI-5Pc"/>
+                            <constraint firstItem="6co-UN-MBI" firstAttribute="leading" secondItem="3ef-xc-tKl" secondAttribute="leading" id="Gpi-LX-EzI"/>
+                            <constraint firstItem="6co-UN-MBI" firstAttribute="top" secondItem="3ef-xc-tKl" secondAttribute="top" id="RAi-lb-FaG"/>
+                            <constraint firstItem="3ef-xc-tKl" firstAttribute="bottom" secondItem="6co-UN-MBI" secondAttribute="bottom" id="pY6-CP-Vmg"/>
+                        </constraints>
                     </view>
+                    <connections>
+                        <outlet property="collectionView" destination="6co-UN-MBI" id="DuV-xk-dDA"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="JK2-wl-9en" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1491" y="72"/>
+            <point key="canvasLocation" x="1529" y="72"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="k9o-Wa-qKY">
