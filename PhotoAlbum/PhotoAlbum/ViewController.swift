@@ -5,27 +5,21 @@ class ViewController: UIViewController {
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addButton: UIBarButtonItem!
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
-    private var customImageDownloadManager: CustomImageDownloadManager = CustomImageDownloadManager()
-    private var downloadedImage: [UIImage] = []
+    private var doodleViewController: DoodleViewController?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        customImageDownloadManager.parsingDoodleData()
-        downloadedImage = customImageDownloadManager.imageData.map { UIImage(data: $0) ?? UIImage() }
-        
         initializeNotificationCenter()
-        
         self.collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
-        
         self.customPhotoManager.getAuthorization()
+        self.doodleViewController = self.storyboard?.instantiateViewController(withIdentifier: "DoodleViewController") as! DoodleViewController
     }
     
-    
     @IBAction func addButtonTouched(_ sender: UIBarButtonItem) {
-        let doodleNavigationController = UINavigationController(rootViewController: DoodleViewController())
+        guard let doodleViewController = doodleViewController else { return }
+        let doodleNavigationController = UINavigationController(rootViewController: doodleViewController)
         doodleNavigationController.modalPresentationStyle = .fullScreen
         self.present(doodleNavigationController, animated: false)
     }
