@@ -2,14 +2,14 @@ import Foundation
 
 class CustomImageDownloadManager {
     private (set) var imageData: [Data] = []
-    
+
     func parsingDoodleData() {
         guard let fileLocation = Bundle.main.url(forResource: "doodle", withExtension: "json") else { return }
         
         do {
             let data = try Data(contentsOf: fileLocation)
             let doodleList = try JSONDecoder().decode([Doodle].self, from: data)
-            convertDoodleToImage((doodleList))
+            convertDoodleToImage(doodleList)
         } catch {
             print(error)
         }
@@ -23,6 +23,4 @@ class CustomImageDownloadManager {
             }
         }
     }
-    
-
 }
