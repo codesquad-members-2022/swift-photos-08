@@ -19,7 +19,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     private let option = PHImageRequestOptions()
     private var images: PHAssetCollection?
     private var assets: [PHAsset] = []
-    var imageData: [Data] = []
+    private (set) var imageData: [Data] = []
     
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
