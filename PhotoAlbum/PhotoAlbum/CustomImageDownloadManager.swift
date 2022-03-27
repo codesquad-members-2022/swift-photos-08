@@ -8,15 +8,24 @@ enum ImageDownloadingError: Error{
 
 class CustomImageDownloadManager {
     
-    private (set) var imageData: [Data] = []
+    private var imageData: [Data] = []
+    var imageCount: Int{
+        return imageData.count
+    }
+    private var completion: ()->Void = {}
     private var logger: Logger = Logger()
     
-    func parseDoodleData(){
+    func getImageData(index: Int)-> Data{
+        return self.imageData[index]
+    }
+    
+    func parseDoodleData(_ completion: @escaping ()->Void){
         guard let fileLocation = Bundle.main.url(forResource: "doodle", withExtension: "json") else { return }
         do{
             let data = try getJSONData(fileLocation: fileLocation)
             let doodleList = try decodeJSONData(data: data)
             try convertDoodleToImage(doodleList)
+            self.completion = completion
         }catch ImageDownloadingError.gettingJSONDataError{
              logger.error("JSONDataDownloadingException")
         }catch ImageDownloadingError.parsingJSONDataError{
@@ -46,17 +55,16 @@ class CustomImageDownloadManager {
     }
     
     private func convertDoodleToImage(_ list: [Doodle]) throws {
-        list.forEach {
-            let url = URL(string: $0.image)!
+        for index in 0..<list.count{
+            let url = URL(string: list[index].image)!
+            let isLast: Bool = index == list.count-1 ? true : false
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
-            DispatchQueue.main.async {
-                self.sendURLRequest(urlRequest: urlRequest)
-            }
+            self.sendURLRequest(urlRequest: urlRequest, isLast: isLast)
         }
     }
     
-    private func sendURLRequest(urlRequest: URLRequest){
+    private func sendURLRequest(urlRequest: URLRequest, isLast: Bool){
         URLSession.shared.dataTask(with: urlRequest){ data, response, error in
             guard error == nil else {
                 self.logger.error("\(error.debugDescription)")
@@ -75,6 +83,10 @@ class CustomImageDownloadManager {
                 self.logger.debug("detected response with 404 status \nurl : \(urlRequest)")
             }else{
                 self.imageData.append(data)
+            }
+            
+            if(isLast){
+                self.completion()
             }
         }.resume()
     }

@@ -4,16 +4,15 @@ class DoodleViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     private var customImageDownloadManager: CustomImageDownloadManager = CustomImageDownloadManager()
-    private var downloadedImage: [UIImage] = []
-    
-    override func viewWillAppear(_ animated: Bool) {
-        self.downloadedImage = self.customImageDownloadManager.imageData.map { UIImage(data: $0) ?? UIImage() }
-        self.collectionView.reloadData()
-    }
         
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.customImageDownloadManager.parseDoodleData()
+        
+        self.customImageDownloadManager.parseDoodleData{
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
         
         self.collectionView.backgroundColor = .darkGray
         self.view.backgroundColor = .darkGray
@@ -33,12 +32,13 @@ class DoodleViewController: UIViewController {
 extension DoodleViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
     func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return downloadedImage.count
+        return self.customImageDownloadManager.imageCount
     }
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomDoodleCollectionViewCell", for: indexPath) as! CustomDoodleCollectionViewCell
-        cell.imageView.image = downloadedImage[indexPath.row]
+        let imageData = self.customImageDownloadManager.getImageData(index: indexPath.row)
+        cell.imageView.image = UIImage(data: imageData)
         return cell
     }
     
