@@ -6,6 +6,11 @@ class DoodleViewController: UIViewController {
     private var customImageDownloadManager: CustomImageDownloadManager = CustomImageDownloadManager()
     private var downloadedImage: [UIImage] = []
     
+    override func viewWillAppear(_ animated: Bool) {
+        self.downloadedImage = self.customImageDownloadManager.imageData.map { UIImage(data: $0) ?? UIImage() }
+        self.collectionView.reloadData()
+    }
+        
     override func viewDidLoad() {
         super.viewDidLoad()
         self.customImageDownloadManager.parseDoodleData()
