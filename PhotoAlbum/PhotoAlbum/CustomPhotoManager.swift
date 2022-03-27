@@ -89,7 +89,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     func photoLibraryDidChange(_ changeInstance: PHChange) {
         var userInfo: [UserInfoKey:Any] = [:]
         userInfo[UserInfoKey.alertTitle] = "옵저버가 변화를 감지했습니다!"
-        userInfo[UserInfoKey.alertMessage] = "아직 무슨 변화인지는 몰라요!"
+        userInfo[UserInfoKey.alertMessage] = "컬렉션뷰를 업데이트합니다."
         userInfo[UserInfoKey.actionTitle] = "OK!"
         userInfo[UserInfoKey.settingActionHandler] = false
         
