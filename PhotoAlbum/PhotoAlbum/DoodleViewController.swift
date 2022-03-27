@@ -8,22 +8,16 @@ class DoodleViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
+        self.customImageDownloadManager.parseDoodleData()
+        
+        self.collectionView.backgroundColor = .darkGray
         self.view.backgroundColor = .darkGray
         self.navigationItem.title = "Doodle"
         self.navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Close", style: .done, target: self, action: #selector(dismissView))
-        
-        DispatchQueue.main.async {
-            DispatchQueue.global().sync {
-                self.customImageDownloadManager.parsingDoodleData()
-                self.downloadedImage = self.customImageDownloadManager.imageData.map { UIImage(data: $0) ?? UIImage() }
-            }
-            
-            self.collectionView.register(CustomDoodleCollectionViewCell.self, forCellWithReuseIdentifier: "CustomDoodleCollectionViewCell")
-            self.collectionView.delegate = self
-            self.collectionView.dataSource = self
-        }
-        
+      
+        self.collectionView.register(CustomDoodleCollectionViewCell.self, forCellWithReuseIdentifier: "CustomDoodleCollectionViewCell")
+        self.collectionView.delegate = self
+        self.collectionView.dataSource = self
     }
     
     @objc func dismissView() {
