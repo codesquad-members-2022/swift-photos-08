@@ -14,7 +14,7 @@ class ViewController: UIViewController {
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
         self.customPhotoManager.getAuthorization()
-        self.doodleViewController = self.storyboard?.instantiateViewController(withIdentifier: "DoodleViewController") as! DoodleViewController
+        self.doodleViewController = self.storyboard?.instantiateViewController(withIdentifier: "DoodleViewController") as? DoodleViewController
     }
     
     @IBAction func addButtonTouched(_ sender: UIBarButtonItem) {
@@ -43,7 +43,9 @@ class ViewController: UIViewController {
         
         authAlert.addAction(getAuthAction)
         DispatchQueue.main.async {
-            self.present(authAlert, animated: true, completion: nil)
+            self.present(authAlert, animated: true, completion: {
+                self.collectionView.reloadData()
+            })
         }
     }
 }
