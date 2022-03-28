@@ -14,6 +14,7 @@ class CustomImageDownloadManager {
     }
     private var completion: ()->Void = {}
     private var logger: Logger = Logger()
+    private var responseCount: Int = 0
     
     func getImageData(index: Int)-> Data{
         return self.imageData[index]
@@ -57,15 +58,16 @@ class CustomImageDownloadManager {
     private func convertDoodleToImage(_ list: [Doodle]) throws {
         for index in 0..<list.count{
             let url = URL(string: list[index].image)!
-            let isLast: Bool = index == list.count-1 ? true : false
             var urlRequest = URLRequest(url: url)
             urlRequest.httpMethod = "GET"
-            self.sendURLRequest(urlRequest: urlRequest, isLast: isLast)
+            self.sendURLRequest(urlRequest: urlRequest, requestCount: list.count)
         }
     }
     
-    private func sendURLRequest(urlRequest: URLRequest, isLast: Bool){
+    private func sendURLRequest(urlRequest: URLRequest, requestCount: Int){
         URLSession.shared.dataTask(with: urlRequest){ data, response, error in
+            self.responseCount += 1
+            
             guard error == nil else {
                 self.logger.error("\(error.debugDescription)")
                 return
@@ -85,7 +87,7 @@ class CustomImageDownloadManager {
                 self.imageData.append(data)
             }
             
-            if(isLast){
+            if (self.responseCount % 10 == 0) || (self.responseCount == requestCount) {
                 self.completion()
             }
         }.resume()
