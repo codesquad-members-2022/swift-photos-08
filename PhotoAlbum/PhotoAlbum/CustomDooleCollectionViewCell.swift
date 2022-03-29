@@ -2,6 +2,9 @@ import Foundation
 import UIKit
 
 class CustomDoodleCollectionViewCell: UICollectionViewCell {
+    override var canBecomeFirstResponder: Bool {
+        return true
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,7 +24,7 @@ class CustomDoodleCollectionViewCell: UICollectionViewCell {
         imageView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         imageView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
     }
-
+    
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
