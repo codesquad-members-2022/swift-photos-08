@@ -37,6 +37,16 @@ class DoodleViewController: UIViewController {
     
     @objc func targetViewDidPress(_ gesture: UILongPressGestureRecognizer) {
         gesture.view?.becomeFirstResponder()
+        
+        guard let cell = gesture.view as? CustomDoodleCollectionViewCell else { return }
+        
+        let menuItem = CustomMenuItem(title: "save", action: #selector(saveDidTap(sender:)), cell: cell)
+        UIMenuController.shared.menuItems = [menuItem]
+        UIMenuController.shared.showMenu(from: cell.superview!, rect: cell.frame)
+    }
+    
+    @objc func saveDidTap(sender: CustomMenuItem) {
+    }
     }
 }
 
