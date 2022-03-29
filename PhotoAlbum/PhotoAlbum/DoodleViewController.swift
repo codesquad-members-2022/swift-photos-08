@@ -46,7 +46,27 @@ class DoodleViewController: UIViewController {
     }
     
     @objc func saveDidTap(sender: CustomMenuItem) {
+        DispatchQueue.main.async {
+            guard let cell = sender.cell else { return }
+            guard let image = cell.imageView.image else { return }
+            self.saveImage(image)
+        }
     }
+    
+    func saveImage(_ image: UIImage) {
+        DispatchQueue.main.async {
+            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
+        }
+    }
+    
+    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
+        if let error = error {
+            print(error)
+        } else {
+            DispatchQueue.main.async {
+                self.collectionView.reloadData()
+            }
+        }
     }
 }
 
