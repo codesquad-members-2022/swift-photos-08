@@ -4,6 +4,7 @@ class DoodleViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     private var customImageDownloadManager: CustomImageDownloadManager = CustomImageDownloadManager()
+    private var customMenuItem: CustomMenuItem = CustomMenuItem(title: "save", action: #selector(saveDidTap(sender:)))
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -24,49 +25,29 @@ class DoodleViewController: UIViewController {
         self.collectionView.dataSource = self
     }
     
-    func addLongPressGesture() {
-        let longPress = UILongPressGestureRecognizer(target: self, action: #selector(targetViewDidPress(_:)))
-        longPress.minimumPressDuration = 0.5
-        longPress.isEnabled = true
-        self.collectionView.addGestureRecognizer(longPress)
-    }
-    
     @objc func dismissView() {
         self.dismiss(animated: false)
     }
     
     @objc func targetViewDidPress(_ gesture: UILongPressGestureRecognizer) {
-        gesture.view?.becomeFirstResponder()
+        guard let gestureView = gesture.view, let superView = gestureView.superview else { return }
         
-        guard let cell = gesture.view as? CustomDoodleCollectionViewCell else { return }
+        let point = gesture.location(in: self.collectionView)
+        let indexPath = self.collectionView.indexPathForItem(at: point)
         
-        let menuItem = CustomMenuItem(title: "save", action: #selector(saveDidTap(sender:)), cell: cell)
-        UIMenuController.shared.menuItems = [menuItem]
-        UIMenuController.shared.showMenu(from: cell.superview!, rect: cell.frame)
+        if indexPath != nil {
+            gestureView.becomeFirstResponder()
+            self.customMenuItem.indexPath = indexPath
+            UIMenuController.shared.menuItems = [customMenuItem]
+            UIMenuController.shared.showMenu(from: superView, rect: gestureView.frame)
+        }
     }
     
     @objc func saveDidTap(sender: CustomMenuItem) {
-        DispatchQueue.main.async {
-            guard let cell = sender.cell else { return }
+            guard let indexPath = self.customMenuItem.indexPath else { return }
+            guard let cell = self.collectionView.cellForItem(at: indexPath) as? CustomDoodleCollectionViewCell else { return }
             guard let image = cell.imageView.image else { return }
-            self.saveImage(image)
-        }
-    }
-    
-    func saveImage(_ image: UIImage) {
-        DispatchQueue.main.async {
-            UIImageWriteToSavedPhotosAlbum(image, self, #selector(self.image(_:didFinishSavingWithError:contextInfo:)), nil)
-        }
-    }
-    
-    @objc func image(_ image: UIImage, didFinishSavingWithError error: NSError?, contextInfo: UnsafeRawPointer) {
-        if let error = error {
-            print(error)
-        } else {
-            DispatchQueue.main.async {
-                self.collectionView.reloadData()
-            }
-        }
+            UIImageWriteToSavedPhotosAlbum(image, nil, nil, nil)
     }
 }
 
@@ -104,12 +85,11 @@ extension DoodleViewController: UICollectionViewDataSource, UICollectionViewDele
 }
 
 class CustomMenuItem: UIMenuItem {
-    var cell: CustomDoodleCollectionViewCell?
+    var indexPath: IndexPath?
     
-    convenience init(title: String, action: Selector, cell: CustomDoodleCollectionViewCell? = nil) {
+    convenience init(title: String, action: Selector, indexPath: IndexPath? = nil) {
         self.init(title: title, action: action)
-        
-        self.cell = cell
+        self.indexPath = indexPath
     }
 }
 
