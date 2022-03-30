@@ -34,16 +34,26 @@ class ViewController: UIViewController {
         guard let actionTitle = notification.userInfo?[CustomPhotoManager.UserInfoKey.actionTitle] as? String else { return }
         guard let settingActionHandler = notification.userInfo?[CustomPhotoManager.UserInfoKey.settingActionHandler] as? Bool else { return }
         
-        let authAlert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
-        let getAuthAction = UIAlertAction(title: actionTitle, style: .default, handler: !settingActionHandler ? nil : { (UIAlertAction) in
-            if let appSettings = URL(string: UIApplication.openSettingsURLString) {
-                UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
-            }
-        })
-        
-        authAlert.addAction(getAuthAction)
         DispatchQueue.main.async {
+            guard let doodleViewController = self.doodleViewController else { return }
+
+            if doodleViewController.isViewLoaded  {
+                self.customPhotoManager.fetchAssetCollection()
+                self.collectionView.reloadData()
+                return
+            }
+            
+            let authAlert = UIAlertController(title: alertTitle, message: alertMessage, preferredStyle: .alert)
+            let getAuthAction = UIAlertAction(title: actionTitle, style: .default, handler: !settingActionHandler ? nil : { (UIAlertAction) in
+                if let appSettings = URL(string: UIApplication.openSettingsURLString) {
+                    UIApplication.shared.open(appSettings, options: [:], completionHandler: nil)
+                }
+            })
+
+            authAlert.addAction(getAuthAction)
+
             self.present(authAlert, animated: true, completion: {
+                self.customPhotoManager.fetchAssetCollection()
                 self.collectionView.reloadData()
             })
         }

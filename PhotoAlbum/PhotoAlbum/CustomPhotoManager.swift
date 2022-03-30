@@ -51,6 +51,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
             self.images = collection
         }
+        self.assets = []
         self.fetchAsset()
     }
     
