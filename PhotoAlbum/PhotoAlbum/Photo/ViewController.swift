@@ -38,7 +38,7 @@ class ViewController: UIViewController {
             guard let doodleViewController = self.doodleViewController else { return }
 
             if doodleViewController.isViewLoaded  {
-                self.customPhotoManager.fetchAssetCollection()
+                self.customPhotoManager.setAssets()
                 self.collectionView.reloadData()
                 return
             }
@@ -53,7 +53,7 @@ class ViewController: UIViewController {
             authAlert.addAction(getAuthAction)
 
             self.present(authAlert, animated: true, completion: {
-                self.customPhotoManager.fetchAssetCollection()
+                self.customPhotoManager.setAssets()
                 self.collectionView.reloadData()
             })
         }
