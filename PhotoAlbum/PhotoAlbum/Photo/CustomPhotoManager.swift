@@ -12,7 +12,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     }
     
     struct NotificationName{
-        static let  authorizationDeniedAlert = Notification.Name("authorizationDeniedAlert")
+        static let sendPresentingAlertSignal = Notification.Name("sendPresentingAlertSignal")
     }
     
     private let manager = PHCachingImageManager()
@@ -37,7 +37,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     
     func getAuthorization() {
         if isAlbumAcessAuthorized() {
-            fetchAssetCollection()
+            self.setAssets()
         } else if isAlbumAccessDenied() {
             self.setAuthAlertAction()
         } else {
@@ -47,24 +47,28 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         }
     }
     
-    func fetchAssetCollection() {
+    func setAssets(){
+        self.assets = fetchAssetCollection()
+    }
+    
+    func fetchAssetCollection() -> [PHAsset] {
         PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
             self.images = collection
         }
-        self.assets = []
-        self.fetchAsset()
+        return self.fetchAsset() ?? []
     }
     
-    func fetchAsset() {
+    func fetchAsset() -> [PHAsset]? {
         guard let images = self.images else {
-            return
+            return nil
         }
-        
+        var assets: [PHAsset] = []
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         PHAsset.fetchAssets(in: images, options: fetchOptions).enumerateObjects({ (asset, _, _) in
-            self.assets.append(asset)
+            assets.append(asset)
         })
+        return assets
     }
     
     func requestImageData(index: Int)-> Data?{
@@ -91,7 +95,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         userInfo[UserInfoKey.actionTitle] = "OK!"
         userInfo[UserInfoKey.settingActionHandler] = false
         
-        NotificationCenter.default.post(name: NotificationName.authorizationDeniedAlert, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: NotificationName.sendPresentingAlertSignal, object: self, userInfo: userInfo)
     }
     
     func setAuthAlertAction() {
@@ -101,6 +105,6 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         userInfo[UserInfoKey.actionTitle] = "넵"
         userInfo[UserInfoKey.settingActionHandler] = true
         
-        NotificationCenter.default.post(name: NotificationName.authorizationDeniedAlert, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: NotificationName.sendPresentingAlertSignal, object: self, userInfo: userInfo)
     }
 }

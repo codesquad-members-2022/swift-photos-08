@@ -12,6 +12,7 @@
 		6F31EA0427ED603E00659880 /* doodle.json in Resources */ = {isa = PBXBuildFile; fileRef = 6F31EA0327ED603D00659880 /* doodle.json */; };
 		6F31EA0727ED611200659880 /* Doodle.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F31EA0627ED611200659880 /* Doodle.swift */; };
 		6F31EA0927ED85E500659880 /* CustomImageDownloadManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F31EA0827ED85E500659880 /* CustomImageDownloadManager.swift */; };
+		B557E9D727F57B3700448EC6 /* CustomMenuItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B557E9D627F57B3700448EC6 /* CustomMenuItem.swift */; };
 		B5C471D927E9692C00E6D827 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C471D827E9692C00E6D827 /* AppDelegate.swift */; };
 		B5C471DB27E9692C00E6D827 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C471DA27E9692C00E6D827 /* SceneDelegate.swift */; };
 		B5C471DD27E9692C00E6D827 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5C471DC27E9692C00E6D827 /* ViewController.swift */; };
@@ -28,6 +29,7 @@
 		6F31EA0327ED603D00659880 /* doodle.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = doodle.json; sourceTree = "<group>"; };
 		6F31EA0627ED611200659880 /* Doodle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Doodle.swift; sourceTree = "<group>"; };
 		6F31EA0827ED85E500659880 /* CustomImageDownloadManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomImageDownloadManager.swift; sourceTree = "<group>"; };
+		B557E9D627F57B3700448EC6 /* CustomMenuItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomMenuItem.swift; sourceTree = "<group>"; };
 		B5C471D527E9692C00E6D827 /* PhotoAlbum.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PhotoAlbum.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B5C471D827E9692C00E6D827 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B5C471DA27E9692C00E6D827 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -59,6 +61,28 @@
 			path = Resource;
 			sourceTree = "<group>";
 		};
+		B557E9D227F5728000448EC6 /* Doodle */ = {
+			isa = PBXGroup;
+			children = (
+				6F31EA0127ED58D000659880 /* DoodleViewController.swift */,
+				B5DC626E27EDA1C0005087C6 /* CustomDooleCollectionViewCell.swift */,
+				6F31EA0827ED85E500659880 /* CustomImageDownloadManager.swift */,
+				6F31EA0627ED611200659880 /* Doodle.swift */,
+				B557E9D627F57B3700448EC6 /* CustomMenuItem.swift */,
+			);
+			path = Doodle;
+			sourceTree = "<group>";
+		};
+		B557E9D327F5729C00448EC6 /* Photo */ = {
+			isa = PBXGroup;
+			children = (
+				B5C471DC27E9692C00E6D827 /* ViewController.swift */,
+				6F31E9FD27E9979A00659880 /* CustomCollectionViewCell.swift */,
+				B5DC626C27EC3BF1005087C6 /* CustomPhotoManager.swift */,
+			);
+			path = Photo;
+			sourceTree = "<group>";
+		};
 		B5C471CC27E9692C00E6D827 = {
 			isa = PBXGroup;
 			children = (
@@ -78,17 +102,12 @@
 		B5C471D727E9692C00E6D827 /* PhotoAlbum */ = {
 			isa = PBXGroup;
 			children = (
+				B557E9D327F5729C00448EC6 /* Photo */,
+				B557E9D227F5728000448EC6 /* Doodle */,
 				6F31EA0527ED605500659880 /* Resource */,
 				B5C471D827E9692C00E6D827 /* AppDelegate.swift */,
 				B5C471DA27E9692C00E6D827 /* SceneDelegate.swift */,
-				B5C471DC27E9692C00E6D827 /* ViewController.swift */,
-				6F31EA0827ED85E500659880 /* CustomImageDownloadManager.swift */,
 				B5C471DE27E9692C00E6D827 /* Main.storyboard */,
-				6F31EA0627ED611200659880 /* Doodle.swift */,
-				6F31EA0127ED58D000659880 /* DoodleViewController.swift */,
-				6F31E9FD27E9979A00659880 /* CustomCollectionViewCell.swift */,
-				B5DC626E27EDA1C0005087C6 /* CustomDooleCollectionViewCell.swift */,
-				B5DC626C27EC3BF1005087C6 /* CustomPhotoManager.swift */,
 				B5C471E127E9692E00E6D827 /* Assets.xcassets */,
 				B5C471E327E9692E00E6D827 /* LaunchScreen.storyboard */,
 				B5C471E627E9692E00E6D827 /* Info.plist */,
@@ -170,6 +189,7 @@
 			files = (
 				6F31EA0927ED85E500659880 /* CustomImageDownloadManager.swift in Sources */,
 				B5DC626F27EDA1C0005087C6 /* CustomDooleCollectionViewCell.swift in Sources */,
+				B557E9D727F57B3700448EC6 /* CustomMenuItem.swift in Sources */,
 				B5C471DD27E9692C00E6D827 /* ViewController.swift in Sources */,
 				6F31EA0227ED58D000659880 /* DoodleViewController.swift in Sources */,
 				6F31EA0727ED611200659880 /* Doodle.swift in Sources */,
