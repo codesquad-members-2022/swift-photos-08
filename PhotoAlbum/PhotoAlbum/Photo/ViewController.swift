@@ -25,7 +25,7 @@ class ViewController: UIViewController {
     }
     
     private func initializeNotificationCenter(){
-        NotificationCenter.default.addObserver(self, selector: #selector(presentAlert(_:)), name: CustomPhotoManager.NotificationName.authorizationDeniedAlert, object: self.customPhotoManager)
+        NotificationCenter.default.addObserver(self, selector: #selector(presentAlert(_:)), name: CustomPhotoManager.NotificationName.sendPresentingAlertSignal, object: self.customPhotoManager)
     }
     
     @objc func presentAlert(_ notification: Notification) {
@@ -59,6 +59,7 @@ class ViewController: UIViewController {
         }
     }
 }
+
 
 extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFlowLayout {
     
