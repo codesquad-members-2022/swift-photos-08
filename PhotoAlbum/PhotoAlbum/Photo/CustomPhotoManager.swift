@@ -37,7 +37,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     
     func getAuthorization() {
         if isAlbumAcessAuthorized() {
-            fetchAssetCollection()
+            self.setAssets()
         } else if isAlbumAccessDenied() {
             self.setAuthAlertAction()
         } else {
@@ -47,24 +47,28 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         }
     }
     
-    func fetchAssetCollection() {
+    func setAssets(){
+        self.assets = fetchAssetCollection()
+    }
+    
+    func fetchAssetCollection() -> [PHAsset] {
         PHAssetCollection.fetchAssetCollections(with: PHAssetCollectionType.smartAlbum, subtype: PHAssetCollectionSubtype.smartAlbumUserLibrary, options: PHFetchOptions()).enumerateObjects { (collection, _, _) in
             self.images = collection
         }
-        self.assets = []
-        self.fetchAsset()
+        return self.fetchAsset() ?? []
     }
     
-    func fetchAsset() {
+    func fetchAsset() -> [PHAsset]? {
         guard let images = self.images else {
-            return
+            return nil
         }
-        
+        var assets: [PHAsset] = []
         let fetchOptions = PHFetchOptions()
         fetchOptions.sortDescriptors = [NSSortDescriptor(key: "creationDate", ascending: false)]
         PHAsset.fetchAssets(in: images, options: fetchOptions).enumerateObjects({ (asset, _, _) in
-            self.assets.append(asset)
+            assets.append(asset)
         })
+        return assets
     }
     
     func requestImageData(index: Int)-> Data?{
