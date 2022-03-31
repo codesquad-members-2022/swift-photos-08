@@ -12,7 +12,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     }
     
     struct NotificationName{
-        static let  authorizationDeniedAlert = Notification.Name("authorizationDeniedAlert")
+        static let sendPresentingAlertSignal = Notification.Name("sendPresentingAlertSignal")
     }
     
     private let manager = PHCachingImageManager()
@@ -91,7 +91,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         userInfo[UserInfoKey.actionTitle] = "OK!"
         userInfo[UserInfoKey.settingActionHandler] = false
         
-        NotificationCenter.default.post(name: NotificationName.authorizationDeniedAlert, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: NotificationName.sendPresentingAlertSignal, object: self, userInfo: userInfo)
     }
     
     func setAuthAlertAction() {
@@ -101,6 +101,6 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         userInfo[UserInfoKey.actionTitle] = "넵"
         userInfo[UserInfoKey.settingActionHandler] = true
         
-        NotificationCenter.default.post(name: NotificationName.authorizationDeniedAlert, object: self, userInfo: userInfo)
+        NotificationCenter.default.post(name: NotificationName.sendPresentingAlertSignal, object: self, userInfo: userInfo)
     }
 }
