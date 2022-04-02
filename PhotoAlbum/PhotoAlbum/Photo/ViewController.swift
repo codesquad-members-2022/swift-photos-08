@@ -27,7 +27,31 @@ class ViewController: UIViewController {
         self.present(doodleNavigationController, animated: false)
     }
     
-    private func initializeNotificationCenter(){
+    @IBAction func editButtonTouched(_ sender: UIBarButtonItem) {
+        guard let selectedInedexPaths = self.collectionView.indexPathsForSelectedItems else { return }
+        selectedInedexPaths.forEach {
+            guard let cell = self.collectionView.cellForItem(at: $0) as? CustomCollectionViewCell else { return }
+            guard let originalImage = cell.imageView.image else { return }
+            guard let ciImage = CIImage(image: originalImage) else { return }
+            guard let bloomImage = self.bloomFilter(ciImage) else { return }
+            
+            if let cgImage = self.context.createCGImage(bloomImage, from: bloomImage.extent) {
+                let uiImage = UIImage(cgImage: cgImage)
+                let renderedData = uiImage.jpegData(compressionQuality: 1)
+                self.customPhotoManager.requestModifyingImageData(index: $0.row, renderedData: renderedData)
+            }
+        }
+    }
+    
+    func bloomFilter(_ input: CIImage) -> CIImage? {
+        guard let bloomFilter = CIFilter(name: "CIBloom") else { return nil }
+        bloomFilter.setValue(input, forKey: kCIInputImageKey)
+        bloomFilter.setValue(1, forKey: kCIInputIntensityKey)
+        bloomFilter.setValue(10, forKey: kCIInputRadiusKey)
+        return bloomFilter.outputImage
+    }
+    
+    private func initializeNotificationCenter() {
         NotificationCenter.default.addObserver(self, selector: #selector(presentAlert(_:)), name: CustomPhotoManager.NotificationName.sendPresentingAlertSignal, object: self.customPhotoManager)
     }
     
@@ -36,7 +60,6 @@ class ViewController: UIViewController {
         guard let alertMessage = notification.userInfo?[CustomPhotoManager.UserInfoKey.alertMessage] as? String else { return }
         guard let actionTitle = notification.userInfo?[CustomPhotoManager.UserInfoKey.actionTitle] as? String else { return }
         guard let settingActionHandler = notification.userInfo?[CustomPhotoManager.UserInfoKey.settingActionHandler] as? Bool else { return }
-        
         DispatchQueue.main.async {
             guard let doodleViewController = self.doodleViewController else { return }
 
@@ -62,30 +85,6 @@ class ViewController: UIViewController {
         }
     }
     
-    @objc func targetViewDidTouched(_ gesture: UITapGestureRecognizer) {
-        let point = gesture.location(in: self.collectionView)
-        
-        guard let indexPath = self.collectionView.indexPathForItem(at: point) else { return }
-        guard let cell = self.collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell else { return }
-        guard let originalImage = cell.imageView.image else { return }
-        guard let ciImage = CIImage(image: originalImage) else { return }
-        guard let bloomImage = bloomFilter(ciImage) else { return }
-        
-        if let cgImage = self.context.createCGImage(bloomImage, from: bloomImage.extent) {
-            let uiImage = UIImage(cgImage: cgImage)
-            let renderedData = uiImage.jpegData(compressionQuality: 1)
-            customPhotoManager.requestModifyingImageData(index: indexPath.row, renderedData: renderedData)
-        }
-    }
-    
-    func bloomFilter(_ input: CIImage) -> CIImage? {
-        guard let bloomFilter = CIFilter(name: "CIBloom") else { return nil }
-        bloomFilter.setValue(input, forKey: kCIInputImageKey)
-        bloomFilter.setValue(1, forKey: kCIInputIntensityKey)
-        bloomFilter.setValue(10, forKey: kCIInputRadiusKey)
-        return bloomFilter.outputImage
-    }
-    
 }
 
 
@@ -101,11 +100,6 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         if let imageData: Data = self.customPhotoManager.requestImageData(index: indexPath.row){
             cell.imageView.image = UIImage(data: imageData)
         }
-        
-//        let touchCell = UITapGestureRecognizer(target: self, action: #selector(targetViewDidTouched(_:)))
-//        touchCell.isEnabled = true
-//        cell.addGestureRecognizer(touchCell)
-        
         return cell
     }
     
