@@ -141,4 +141,5 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
 
 extension ViewController: CustomCollectionViewCellDelegate {
     
+    func determiningButtonValidationReqeusted() {
 }
