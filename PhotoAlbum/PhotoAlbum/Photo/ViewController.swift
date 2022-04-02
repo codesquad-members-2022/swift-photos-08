@@ -72,6 +72,11 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         if let imageData: Data = self.customPhotoManager.requestImageData(index: indexPath.row){
             cell.imageView.image = UIImage(data: imageData)
         }
+        
+        let touchCell = UITapGestureRecognizer(target: self, action: #selector(targetViewDidTouched(_:)))
+        touchCell.isEnabled = true
+        cell.addGestureRecognizer(touchCell)
+        
         return cell
     }
     
