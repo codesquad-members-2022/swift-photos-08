@@ -53,7 +53,11 @@
                                 <action selector="addButtonTouched:" destination="BYZ-38-t0r" id="iu6-dc-CaN"/>
                             </connections>
                         </barButtonItem>
-                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="TiX-tT-edL"/>
+                        <barButtonItem key="rightBarButtonItem" enabled="NO" systemItem="edit" id="TiX-tT-edL">
+                            <connections>
+                                <action selector="editButtonTouched:" destination="BYZ-38-t0r" id="s3Y-N4-oIb"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="addButton" destination="ChL-FC-GbY" id="kvW-s1-wVv"/>

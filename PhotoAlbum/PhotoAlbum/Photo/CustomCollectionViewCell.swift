@@ -3,6 +3,12 @@ import UIKit
 
 class CustomCollectionViewCell: UICollectionViewCell {
     weak var delegate: CustomCollectionViewCellDelegate?
+
+    override var isSelected: Bool {
+        didSet {
+            delegate?.determiningButtonValidationReqeusted()
+        }
+    }
     
     override init(frame: CGRect) {
         super.init(frame: frame)
