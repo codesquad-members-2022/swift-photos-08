@@ -25,7 +25,7 @@
 
 |사진 권한 획득|구현 결과물|
 |---|---|
-|<img width="366" src="https://user-images.githubusercontent.com/45891045/159650147-31e1566e-408e-42b5-bd55-7a690cc8d6db.gif">|<img width="360" scr="https://user-images.githubusercontent.com/45891045/161375746-009427b7-9105-498f-9d33-23bdf065797b.gif">|
+|<img width="360" src="https://user-images.githubusercontent.com/45891045/159650147-31e1566e-408e-42b5-bd55-7a690cc8d6db.gif">|<img width="360" src="https://user-images.githubusercontent.com/45891045/161375746-009427b7-9105-498f-9d33-23bdf065797b.gif">|
 
 
 ## 고민과 해결과정
