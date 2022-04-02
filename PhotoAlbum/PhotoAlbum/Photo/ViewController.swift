@@ -100,9 +100,9 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
             cell.imageView.image = UIImage(data: imageData)
         }
         
-        let touchCell = UITapGestureRecognizer(target: self, action: #selector(targetViewDidTouched(_:)))
-        touchCell.isEnabled = true
-        cell.addGestureRecognizer(touchCell)
+//        let touchCell = UITapGestureRecognizer(target: self, action: #selector(targetViewDidTouched(_:)))
+//        touchCell.isEnabled = true
+//        cell.addGestureRecognizer(touchCell)
         
         return cell
     }
