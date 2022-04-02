@@ -15,6 +15,7 @@ class ViewController: UIViewController {
         self.collectionView.register(CustomCollectionViewCell.self, forCellWithReuseIdentifier: "CustomCollectionViewCell")
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
+        self.collectionView.allowsMultipleSelection = true
         self.customPhotoManager.getAuthorization()
         self.doodleViewController = self.storyboard?.instantiateViewController(withIdentifier: "DoodleViewController") as? DoodleViewController
     }
@@ -112,6 +113,32 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
         return .init(width: 100, height: 100)
     }
     
+    func collectionView(_ collectionView: UICollectionView, shouldSelectItemAt indexPath: IndexPath) -> Bool {
+        if self.collectionView.allowsMultipleSelection {
+            guard let cell = self.collectionView.cellForItem(at: indexPath) else { return false }
+            if !cell.isSelected {
+                cell.isSelected = true
+                cell.layer.borderWidth = 4
+                cell.layer.borderColor = CGColor(red: 1, green: 0, blue: 0, alpha: 10)
+            }
+        }
+        return true
+    }
+    
+    func collectionView(_ collectionView: UICollectionView, shouldDeselectItemAt indexPath: IndexPath) -> Bool {
+        if self.collectionView.allowsMultipleSelection {
+            guard let cell = self.collectionView.cellForItem(at: indexPath) else { return false }
+            if cell.isSelected {
+                cell.isSelected = false
+                cell.layer.borderWidth = 0
+            }
+        }
+        return true
+    }
+    
+}
+
+
 extension ViewController: CustomCollectionViewCellDelegate {
     
 }
