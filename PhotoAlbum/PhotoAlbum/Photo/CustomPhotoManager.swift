@@ -84,7 +84,7 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     
     func requestModifyingImageData(index: Int, renderedData: Data?) {
         let asset = assets[index]
-        
+    
         asset.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
             let adjData = PHAdjustmentData(formatIdentifier: "codesquad2022.ios.PhotoAlbum", formatVersion: "1.0", data: renderedData!)
             
@@ -95,7 +95,12 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
                 try renderedData?.write(to: contentOutput.renderedContentURL, options: .atomic)
                 PHPhotoLibrary.shared().performChanges({
                     let request = PHAssetChangeRequest(for: asset)
-                    request.contentEditingOutput = contentOutput
+                    let isEdited = PHAssetResource.assetResources(for: asset).contains(where: { $0.type == .adjustmentData })
+                    if isEdited {
+                        request.revertAssetContentToOriginal()
+                    } else {
+                        request.contentEditingOutput = contentOutput
+                    }
                 })
             } catch let error {
                 self.logger.error("\(error.localizedDescription)")
