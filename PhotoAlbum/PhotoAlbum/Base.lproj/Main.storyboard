@@ -53,10 +53,12 @@
                                 <action selector="addButtonTouched:" destination="BYZ-38-t0r" id="iu6-dc-CaN"/>
                             </connections>
                         </barButtonItem>
+                        <barButtonItem key="rightBarButtonItem" systemItem="edit" id="TiX-tT-edL"/>
                     </navigationItem>
                     <connections>
                         <outlet property="addButton" destination="ChL-FC-GbY" id="kvW-s1-wVv"/>
                         <outlet property="collectionView" destination="2KA-P6-CL1" id="mSL-RO-W0i"/>
+                        <outlet property="editButton" destination="TiX-tT-edL" id="hBP-le-2bX"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>

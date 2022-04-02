@@ -4,6 +4,7 @@ class ViewController: UIViewController {
     
     @IBOutlet weak var collectionView: UICollectionView!
     @IBOutlet weak var addButton: UIBarButtonItem!
+    @IBOutlet weak var editButton: UIBarButtonItem!
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
     private var doodleViewController: DoodleViewController?
     private let context = CIContext()
