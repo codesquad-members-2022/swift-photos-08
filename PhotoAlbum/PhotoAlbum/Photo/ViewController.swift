@@ -131,15 +131,23 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
             if cell.isSelected {
                 cell.isSelected = false
                 cell.layer.borderWidth = 0
+                cell.layer.borderColor = .none
             }
         }
         return true
     }
-    
+        
 }
 
 
 extension ViewController: CustomCollectionViewCellDelegate {
     
     func determiningButtonValidationReqeusted() {
+        if self.collectionView.indexPathsForSelectedItems?.count ?? 0 > 0 {
+            editButton.isEnabled = true
+        } else {
+            editButton.isEnabled = false
+        }
+    }
+    
 }
