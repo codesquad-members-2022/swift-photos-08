@@ -58,6 +58,9 @@ class ViewController: UIViewController {
             })
         }
     }
+    
+    @objc func targetViewDidTouched(_ gesture: UITapGestureRecognizer) {
+    }
 }
 
 
