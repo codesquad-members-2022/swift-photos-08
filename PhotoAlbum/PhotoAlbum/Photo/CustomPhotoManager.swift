@@ -1,5 +1,6 @@
 import Foundation
 import Photos
+import OSLog
 
 class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
     
@@ -15,11 +16,12 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
         static let sendPresentingAlertSignal = Notification.Name("sendPresentingAlertSignal")
     }
     
+    private var logger: Logger = Logger()
     private let manager = PHCachingImageManager()
     private let option = PHImageRequestOptions()
     private var images: PHAssetCollection?
     private var assets: [PHAsset] = []
-    
+
     deinit {
         PHPhotoLibrary.shared().unregisterChangeObserver(self)
     }
@@ -78,6 +80,27 @@ class CustomPhotoManager: NSObject, PHPhotoLibraryChangeObserver{
             imageData = data
         })
         return imageData
+    }
+    
+    func requestModifyingImageData(index: Int, renderedData: Data?) {
+        let asset = assets[index]
+        
+        asset.requestContentEditingInput(with: nil, completionHandler: { (contentEditingInput, info) in
+            let adjData = PHAdjustmentData(formatIdentifier: "codesquad2022.ios.PhotoAlbum", formatVersion: "1.0", data: renderedData!)
+            
+            let contentOutput = PHContentEditingOutput(contentEditingInput: contentEditingInput!)
+            contentOutput.adjustmentData = adjData
+            
+            do {
+                try renderedData?.write(to: contentOutput.renderedContentURL, options: .atomic)
+                PHPhotoLibrary.shared().performChanges({
+                    let request = PHAssetChangeRequest(for: asset)
+                    request.contentEditingOutput = contentOutput
+                })
+            } catch let error {
+                self.logger.error("\(error.localizedDescription)")
+            }
+        })
     }
     
     func isAlbumAcessAuthorized() -> Bool {
