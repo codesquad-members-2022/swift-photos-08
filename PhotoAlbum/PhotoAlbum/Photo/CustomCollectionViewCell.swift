@@ -2,6 +2,7 @@ import Foundation
 import UIKit
 
 class CustomCollectionViewCell: UICollectionViewCell {
+    weak var delegate: CustomCollectionViewCellDelegate?
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -21,6 +22,8 @@ class CustomCollectionViewCell: UICollectionViewCell {
         imageView.leftAnchor.constraint(equalTo: self.leftAnchor).isActive = true
         imageView.rightAnchor.constraint(equalTo: self.rightAnchor).isActive = true
     }
+    
+    
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")

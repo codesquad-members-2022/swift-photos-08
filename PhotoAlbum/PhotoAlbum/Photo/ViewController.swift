@@ -95,6 +95,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     
     func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
         let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "CustomCollectionViewCell", for: indexPath) as! CustomCollectionViewCell
+        cell.delegate = self
         if let imageData: Data = self.customPhotoManager.requestImageData(index: indexPath.row){
             cell.imageView.image = UIImage(data: imageData)
         }
@@ -109,5 +110,7 @@ extension ViewController: UICollectionViewDataSource, UICollectionViewDelegateFl
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
         return .init(width: 100, height: 100)
     }
+    
+extension ViewController: CustomCollectionViewCellDelegate {
     
 }
