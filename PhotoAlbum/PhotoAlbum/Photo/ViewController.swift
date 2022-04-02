@@ -6,6 +6,7 @@ class ViewController: UIViewController {
     @IBOutlet weak var addButton: UIBarButtonItem!
     private var customPhotoManager: CustomPhotoManager = CustomPhotoManager()
     private var doodleViewController: DoodleViewController?
+    private let context = CIContext()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -60,7 +61,29 @@ class ViewController: UIViewController {
     }
     
     @objc func targetViewDidTouched(_ gesture: UITapGestureRecognizer) {
+        let point = gesture.location(in: self.collectionView)
+        
+        guard let indexPath = self.collectionView.indexPathForItem(at: point) else { return }
+        guard let cell = self.collectionView.cellForItem(at: indexPath) as? CustomCollectionViewCell else { return }
+        guard let originalImage = cell.imageView.image else { return }
+        guard let ciImage = CIImage(image: originalImage) else { return }
+        guard let bloomImage = bloomFilter(ciImage) else { return }
+        
+        if let cgImage = self.context.createCGImage(bloomImage, from: bloomImage.extent) {
+            let uiImage = UIImage(cgImage: cgImage)
+            let renderedData = uiImage.jpegData(compressionQuality: 1)
+            customPhotoManager.requestModifyingImageData(index: indexPath.row, renderedData: renderedData)
+        }
     }
+    
+    func bloomFilter(_ input: CIImage) -> CIImage? {
+        guard let bloomFilter = CIFilter(name: "CIBloom") else { return nil }
+        bloomFilter.setValue(input, forKey: kCIInputImageKey)
+        bloomFilter.setValue(1, forKey: kCIInputIntensityKey)
+        bloomFilter.setValue(10, forKey: kCIInputRadiusKey)
+        return bloomFilter.outputImage
+    }
+    
 }
 
 
